@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4c141196-c933-4ee3-a2fb-a2b6e6c41dac" name="gruselpi" url="http://192.168.178.33">
+        <fileTransfer host="192.168.178.33" port="22" privateKey="$USER_HOME$/.ssh/gruselpi" rootFolder="/opt/rpi_video_player/" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
