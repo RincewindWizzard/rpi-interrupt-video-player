@@ -36,6 +36,10 @@ Danach folgt ein Unterstrich und der frei wählbare Teil des Dateinamens.
 Ein Beispiel:
 
     02_Katzenvideo.avi
+    03_Echsenmenschen.avi
+    04_Flache Erde.avi
+
+Pro Pin darf nur ein Video angegeben werden!
 
 Zusätzlich zu den Videodateien gibt es noch eine besondere Datei mit dem Namen "background.jpg",
 die zwischen den Videos im Leerlauf gezeigt wird.
@@ -50,7 +54,7 @@ In den Tests waren das bis zu 2 Sekunden.
 Um dieses Problem einzudämmen, hält der Signal Player das jeweils zuletzt gespielte Video im Speicher,
 in der Hoffnung, dass es in Zukunft wieder gebraucht wird.
 Das führt dazu, das wenn immer wieder das gleiche Video abgespielt werden soll, es keine spürbare Verzögerung gibt.
-Wenn jedoch unterschiedliche Video hintereinander gespielt werden sollen,
+Wenn jedoch unterschiedliche Videos hintereinander gespielt werden sollen,
 gibt es eine kurze Verzögerung zwischen Signal und Start.
 Dies ist bei der Planung zu berücksichtigen.
 
@@ -58,8 +62,8 @@ Dies ist bei der Planung zu berücksichtigen.
 Du bekommst von mir eine Datei, ein sogennantes "Image", welches auf eine SD Karte geflasht werden muss,
 die man dann in ein Raspberry Pi stecken kann.
 Unter Windows gibt es die Software [Etcher](https://etcher.io/), die diese Aufgabe übernimmt.
-Dabei ist es sehr wichtig, dass man auch wirklich die SD Karte als Ziel auswählt.
 
+Dabei ist es sehr wichtig, dass man auch wirklich die SD Karte als Ziel auswählt.
 Wenn man sich hier vertut, kann es sein dass man versehentlich **alle Daten auf seinem Computer unwideruflich löscht!**
 Also Vorsicht!
 

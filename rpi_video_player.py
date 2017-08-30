@@ -138,8 +138,7 @@ def main():
             time.sleep(10)
 
     log.debug("Video Player Dienst wurde gestartet")
-    if os.path.isfile(background_image):
-        subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', background_image], stdout=subprocess.DEVNULL)
+
     try:
         videos = find_videos()
         buttons = []
@@ -161,6 +160,8 @@ def main():
                 buttons.append(button)
                 log.debug('Video file "{}" on GPIO{}'.format(os.path.basename(video), pin))
             log.debug("Warte auf Signale")
+            if os.path.isfile(background_image):
+                subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', background_image], stdout=subprocess.DEVNULL)
             pause()
     except PinConflict as e:
         log.critical(str(e))
