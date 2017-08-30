@@ -3,7 +3,7 @@ import os.path
 import sys
 import threading
 from multiprocessing import Process, Queue
-
+import atexit
 import time
 import logging
 import logging.handlers
@@ -61,18 +61,20 @@ def omxplayer_process(queue):
                 log.debug('Load new Video: {}'.format(video))
                 dbus_name = 'org.mpris.MediaPlayer2.omxplayer{}'.format(player_num)
                 player = OMXPlayer(video, args=omxplayer_args, dbus_name=dbus_name, pause=True)
+                player_num += 1
                 #log.debug(player.volume())
                 player.set_volume(1.5)
                 time.sleep(1)
 
-            player.set_alpha(255)
-            player.play_sync()
-            player.pause()
-            player.set_alpha(0)
-            player.set_position(0)
+            # das erste Video soll nicht abgespielt werden, sondern nur einen Kaltstart vermeiden
+            if not last_video == None:
+                player.set_alpha(255)
+                player.play_sync()
+                player.pause()
+                player.set_alpha(0)
+                player.set_position(0)
+                log.debug('Video fertig: {}'.format(video))
 
-
-            log.debug('Video fertig: {}'.format(video))
             last_video = video
 
             try:
@@ -92,6 +94,8 @@ class VideoPlayer(object):
         self.player = None
         self.queue = Queue(1)
         self.thread = Process(target=omxplayer_process, args=(self.queue,))
+        # Video schon mal in den Speicher laden
+        self.play(videos[0])
 
     def play(self, video):
         try:
@@ -108,45 +112,6 @@ class VideoPlayer(object):
         self.queue.put(False)
         self.thread.join()
         killall_omxplayer()
-
-"""
-
-
-
-    def _new_player(self, video, pause=True):
-        dbus_name = 'org.mpris.MediaPlayer2.omxplayer{}'.format(self._player_num)
-        player = OMXPlayer(video, args=['--no-osd', '-b', '--loop'], dbus_name=dbus_name,
-                           pause=pause)
-        self._player_num += 1
-        return player
-        
-        
-# holds every video in memory, might crash
-class VideoPlayer(object):
-    def __init__(self, videos):
-        self.omxplayers = {}
-        for i, video in enumerate(videos):
-            dbus_name = 'org.mpris.MediaPlayer2.omxplayer{}'.format(i)
-            player = OMXPlayer(video, args=['--no-osd', '-b', '--loop', '--dbus_name', dbus_name], dbus_name=dbus_name, pause=True)
-            self.omxplayers[video] = player
-
-    def play(self, video):
-        try:
-            log.debug('Play {}'.format(video))
-            player = self.omxplayers[video]
-            player.play_sync()
-            player.pause()
-        except omxplayer.player.OMXPlayerDeadError:
-            raise
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args, **kwargs):
-        log.debug('Kill players')
-        for k, player in self.omxplayers.items():
-            player.quit()
-"""
 
 
 
@@ -170,10 +135,11 @@ def main():
             log.info('USB Stick wurde erkannt! Kopiere Daten...')
             subprocess.call(['sudo', 'rsync', '-av', '--delete', usb_mountpoint, video_path])
             log.info('Dateien wurden kopiert. USB Stick kann jetzt entfernt werden.')
+            time.sleep(10)
 
     log.debug("Video Player Dienst wurde gestartet")
     if os.path.isfile(background_image):
-        subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', '/usr/local/share/rpi-video-player/standbild.jpg'], stdout=subprocess.DEVNULL)
+        subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', background_image], stdout=subprocess.DEVNULL)
     try:
         videos = find_videos()
         buttons = []
@@ -202,7 +168,7 @@ def main():
     except KeyboardInterrupt:
         ...
     finally:
-        killall_fbi
+        killall_fbi()
         killall_omxplayer()
 
 
@@ -215,6 +181,9 @@ if __name__ == '__main__':
     handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
     log.addHandler(handler)
     log.addHandler(logging.handlers.SysLogHandler(address='/dev/log'))
+
+    atexit.register(killall_omxplayer)
+    atexit.register(killall_fbi)
 
     main()
 
