@@ -54,3 +54,15 @@ Wenn jedoch unterschiedliche Video hintereinander gespielt werden sollen,
 gibt es eine kurze Verzögerung zwischen Signal und Start.
 Dies ist bei der Planung zu berücksichtigen.
 
+# SD Karten vorbereiten
+Du bekommst von mir eine Datei, ein sogennantes "Image", welches auf eine SD Karte geflasht werden muss,
+die man dann in ein Raspberry Pi stecken kann.
+Unter Windows gibt es die Software [Etcher](https://etcher.io/), die diese Aufgabe übernimmt.
+Dabei ist es sehr wichtig, dass man auch wirklich die SD Karte als Ziel auswählt.
+
+Wenn man sich hier vertut, kann es sein dass man versehentlich **alle Daten auf seinem Computer unwideruflich löscht!**
+Also Vorsicht!
+
+
+
+
