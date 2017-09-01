@@ -28,7 +28,9 @@ class PinConflict(Exception):
 
 video_name_regex = re.compile(r'^(?P<pin>\d\d)_.*$')
 video_path = '/usr/local/share/rpi-video-player/'
+installation_path = '/opt/rpi_video_player/'
 background_image = os.path.join(video_path, 'background.jpg')
+pin_layout_image = os.path.join(installation_path, 'images/pin_layout.png')
 usb_mountpoint = '/media/usb/'
 omxplayer_args = ['--no-osd', '-o', 'both', '--loop']
 
@@ -37,7 +39,10 @@ def killall_omxplayer():
     subprocess.call(['killall', 'omxplayer.bin'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def killall_fbi():
-    subprocess.call(['killall', 'fbi'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.call(['sudo', 'killall', 'fbi'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def show_image(image):
+    subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', image], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def omxplayer_process(queue):
     try:
@@ -63,7 +68,7 @@ def omxplayer_process(queue):
                 player = OMXPlayer(video, args=omxplayer_args, dbus_name=dbus_name, pause=True)
                 player_num += 1
                 #log.debug(player.volume())
-                player.set_volume(1.5)
+                player.set_volume(1.0)
                 time.sleep(1)
 
             # das erste Video soll nicht abgespielt werden, sondern nur einen Kaltstart vermeiden
@@ -161,7 +166,14 @@ def main():
                 log.debug('Video file "{}" on GPIO{}'.format(os.path.basename(video), pin))
             log.debug("Warte auf Signale")
             if os.path.isfile(background_image):
-                subprocess.call(['sudo', 'fbi', '-T', '1', '-noverbose', background_image], stdout=subprocess.DEVNULL)
+                show_image(background_image)
+            else:
+                time.sleep(5)
+                log.debug('Zeige Pin Layout')
+                show_image(pin_layout_image)
+                time.sleep(10)
+                log.debug('Verberge Pin Layout')
+                killall_fbi()
             pause()
     except PinConflict as e:
         log.critical(str(e))

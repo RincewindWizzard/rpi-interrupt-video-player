@@ -18,7 +18,7 @@ da du dein Raspberry Pi ansonsten ernsthaft beschädigen kannst.
 Im folgenden Bild siehst du die Nummerierung der Pins.
 Über diese Nummern werden die Videos einem Pin zugeordnet.
 
-![Belegung der Pins im Raspberry Pi](./images/pin_layout.svg)
+![Belegung der Pins im Raspberry Pi](./images/pin_layout.png)
 
 # Dateiformat
 Es wird eine Vielzahl unterschiedlicher Video- und Audioformate unterstützt.
@@ -67,6 +67,15 @@ Dabei ist es sehr wichtig, dass man auch wirklich die SD Karte als Ziel auswähl
 Wenn man sich hier vertut, kann es sein dass man versehentlich **alle Daten auf seinem Computer unwideruflich löscht!**
 Also Vorsicht!
 
+# Anmerkung zum Loop Player
+Die neue Version des Loop Players unterstützt jetzt auch unterschiedliche Intervalle.
+Das Format für die Dateinamen ist:
+
+                   Intervalldauer (mm:ss)
+                   |
+    Dateiname_0000_1000.avi
+              |
+              Startzeitpunkt (mm:ss)
 
 
 
